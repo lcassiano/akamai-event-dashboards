@@ -42,10 +42,10 @@ ELK_INDEX_PREFIX="akamai-blackfriday"
 
 ## Install
 
-`git clone https://github.com/lcassiano/akamai-event-dashboards.git`
-`cd consumer/src`
-`npm install`
-`node main.js`
+- `git clone https://github.com/lcassiano/akamai-event-dashboards.git`
+- `cd consumer/src`
+- `npm install`
+- `node main.js`
 
 
 ## Maintainers
