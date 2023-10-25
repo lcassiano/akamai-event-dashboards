@@ -4,6 +4,8 @@ The project intends to provide a easy way get Akamai todaytraffic-by-time [Repor
 
 ## Prerequisites
 
+### Install NodeJS
+
 To Run this project, you will need to install [nodejs](https://nodejs.org/en/download) on your machine.
 
 ### Credentials
