@@ -8,8 +8,8 @@ const fetchTraffic = async function () {
             const minutefrom = (now.getUTCMinutes() - (now.getUTCMinutes() % 5)) - 5
             const minuteto = (now.getUTCMinutes() - (now.getUTCMinutes() % 5))
             
-            const dtfrom = `${now.toISOString().split('T')[0]}T${now.getUTCHours()}:${minutefrom.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:00Z`;
-            const dtto = `${now.toISOString().split('T')[0]}T${now.getUTCHours()}:${minuteto.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:00Z`;
+            const dtfrom = `${now.toISOString().split('T')[0]}T${now.getUTCHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:${minutefrom.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:00Z`;
+            const dtto = `${now.toISOString().split('T')[0]}T${now.getUTCHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:${minuteto.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:00Z`;
             
             var eg = new EdgeGrid({
                 path: '.edgerc',
