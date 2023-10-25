@@ -12,7 +12,7 @@ Before you begin, you need to [Create authentication credentials](https://techdo
 
 - `git clone https://github.com/lcassiano/akamai-event-dashboards.git`
 
-### .edgerc authentication
+### Create file .edgerc authentication
 
 Create `.edgerc` file on src folder and put your credentials, an `.edgerc` file contains sections for each of your API client credentials and is usually hosted in your home directory:
 
@@ -33,7 +33,7 @@ access_token = akab-XXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXX
 max-body = 131072
 ```
 
-### .env file
+### Create file .env
 
 Create `.env` file on src folder with the following informations :
 
