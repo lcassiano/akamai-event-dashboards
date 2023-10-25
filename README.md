@@ -4,6 +4,8 @@ The project intends to provide a easy way get Akamai todaytraffic-by-time [Repor
 
 ## Prerequisites
 
+To Run this project, you will need to install [nodejs](https://nodejs.org/en/download) on your machine.
+
 ### Credentials
 
 Before you begin, you need to [Create authentication credentials](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials) in [Control Center](https://control.akamai.com).
