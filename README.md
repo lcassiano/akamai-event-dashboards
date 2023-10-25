@@ -8,6 +8,10 @@ The project intends to provide a easy way get Akamai todaytraffic-by-time [Repor
 
 Before you begin, you need to [Create authentication credentials](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials) in [Control Center](https://control.akamai.com).
 
+## Get source files
+
+- `git clone https://github.com/lcassiano/akamai-event-dashboards.git`
+
 ### .edgerc authentication
 
 Create `.edgerc` file on src folder and put your credentials, an `.edgerc` file contains sections for each of your API client credentials and is usually hosted in your home directory:
@@ -42,7 +46,6 @@ ELK_INDEX_PREFIX="akamai-blackfriday"
 
 ## Install
 
-- `git clone https://github.com/lcassiano/akamai-event-dashboards.git`
 - `cd consumer/src`
 - `npm install`
 - `node main.js`
