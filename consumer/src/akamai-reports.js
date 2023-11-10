@@ -1,15 +1,25 @@
 const EdgeGrid = require('akamai-edgegrid');
 
+function subtractMinutesFromDate(date, min) {
+    date.setMinutes(date.getMinutes() - min);
+    return date;
+}
+
 const fetchTraffic = async function () {
     return new Promise(function (resolve, reject) {
         try {
 
+
+            const tempDate = new Date(Date.now());
             const now = new Date(Date.now());
-            const minutefrom = (now.getUTCMinutes() - (now.getUTCMinutes() % 5)) - 5
+            const nowFrom = subtractMinutesFromDate(tempDate, 5);
+
+            const minutefrom = (nowFrom.getUTCMinutes() - (nowFrom.getUTCMinutes() % 5))
             const minuteto = (now.getUTCMinutes() - (now.getUTCMinutes() % 5))
-            
-            const dtfrom = `${now.toISOString().split('T')[0]}T${now.getUTCHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:${minutefrom.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:00Z`;
-            const dtto = `${now.toISOString().split('T')[0]}T${now.getUTCHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:${minuteto.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:00Z`;
+
+            const dtfrom = `${nowFrom.toISOString().split('T')[0]}T00:00:00Z`;
+            //const dtfrom = `${nowFrom.toISOString().split('T')[0]}T${nowFrom.getUTCHours().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}:${minutefrom.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}:00Z`;
+            const dtto = `${now.toISOString().split('T')[0]}T${now.getUTCHours().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}:${minuteto.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}:00Z`;
             
             var eg = new EdgeGrid({
                 path: '.edgerc',
@@ -28,8 +38,50 @@ const fetchTraffic = async function () {
                 body: {
                     "objectType": "cpcode",
                     "objectIds": ["all"],
-                    "metrics": ["edgeBitsPerSecond", "edgeHitsPerSecond", "midgressBitsPerSecond", "midgressHitsPerSecond", "originBitsPerSecond", "originHitsPerSecond",
-                        "bytesOffload", "hitsOffload"]
+                    "metrics": [
+                        "bytesOffload",
+                        "bytesOffloadAvg",
+                        "bytesOffloadMax",
+                        "bytesOffloadMin",
+                        "bytesOffloadSlope",
+                        "bytesOffloadTotal",
+                        "edgeBitsPerSecond",
+                        "edgeBitsPerSecondMax",
+                        "edgeBitsPerSecondMin",
+                        "edgeBytesSlope",
+                        "edgeBytesTotal",
+                        "edgeHitsPerSecond",
+                        "edgeHitsPerSecondMax",
+                        "edgeHitsPerSecondMin",
+                        "edgeHitsSlope",
+                        "edgeHitsTotal",
+                        "hitsOffload",
+                        "hitsOffloadAvg",
+                        "hitsOffloadMax",
+                        "hitsOffloadMin",
+                        "hitsOffloadSlope",
+                        "hitsOffloadTotal",
+                        "midgressBitsPerSecond",
+                        "midgressBitsPerSecondMax",
+                        "midgressBitsPerSecondMin",
+                        "midgressBytesSlope",
+                        "midgressBytesTotal",
+                        "midgressHitsPerSecond",
+                        "midgressHitsPerSecondMax",
+                        "midgressHitsPerSecondMin",
+                        "midgressHitsSlope",
+                        "midgressHitsTotal",
+                        "originBitsPerSecond",
+                        "originBitsPerSecondMax",
+                        "originBitsPerSecondMin",
+                        "originBytesSlope",
+                        "originBytesTotal",
+                        "originHitsPerSecond",
+                        "originHitsPerSecondMax",
+                        "originHitsPerSecondMin",
+                        "originHitsSlope",
+                        "originHitsTotal"
+                    ]
                 }
             };
 

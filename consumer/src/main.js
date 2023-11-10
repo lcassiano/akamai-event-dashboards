@@ -4,6 +4,46 @@ require('dotenv').config()
 const { Client } = require("@opensearch-project/opensearch");
 const akamaiReports = require("./akamai-reports.js");
 
+const FieldsData = [
+  "bytesOffload",
+  "edgeBitsPerSecond",
+  "edgeHitsPerSecond",
+  "hitsOffload",
+  "midgressBitsPerSecond",
+  "midgressHitsPerSecond",
+  "originBitsPerSecond",
+  "originHitsPerSecond"
+]
+
+const FieldsSummaryStatistics = [
+  "bytesOffloadAvg",
+  "bytesOffloadMax",
+  "bytesOffloadMin",
+  "bytesOffloadTotal",
+  "edgeBitsPerSecondMax",
+  "edgeBitsPerSecondMin",
+  "edgeBytesTotal",
+  "edgeHitsPerSecondMax",
+  "edgeHitsPerSecondMin",
+  "edgeHitsTotal",
+  "hitsOffloadAvg",
+  "hitsOffloadMax",
+  "hitsOffloadMin",
+  "hitsOffloadTotal",
+  "midgressBitsPerSecondMax",
+  "midgressBitsPerSecondMin",
+  "midgressBytesTotal",
+  "midgressHitsPerSecondMax",
+  "midgressHitsPerSecondMin",
+  "midgressHitsTotal",
+  "originBitsPerSecondMax",
+  "originBitsPerSecondMin",
+  "originBytesTotal",
+  "originHitsPerSecondMax",
+  "originHitsPerSecondMin",
+  "originHitsTotal"
+]
+
 function main() {
 
   const indexPrefix = process.env.ELK_INDEX_PREFIX;
@@ -27,30 +67,78 @@ function main() {
 
     const now = new Date(Date.now())
 
-    if (docjson.data[0].bytesOffload) {
+    console.log(`Starting to save ${indexPrefix}-${now.toISOString().split("T")[0]}!!!`)
 
-      console.log(`Starting to save ${indexPrefix}-${now.toISOString().split("T")[0]}!!!`)
+    docjson.data.forEach((doc) => {
 
       var trafficReport = {
         cpcode: 999999,
-        "startdatetime": docjson.data[0].startdatetime,
-        "bytesOffload": parseInt(docjson.data[0].bytesOffload),
-        "edgeBitsPerSecond": parseFloat(docjson.data[0].edgeBitsPerSecond),
-        "edgeHitsPerSecond": parseFloat(docjson.data[0].edgeHitsPerSecond),
-        "hitsOffload": parseInt(docjson.data[0].hitsOffload),
-        "midgressBitsPerSecond": parseFloat(docjson.data[0].midgressBitsPerSecond),
-        "midgressHitsPerSecond": parseFloat(docjson.data[0].midgressHitsPerSecond),
-        "originBitsPerSecond": parseFloat(docjson.data[0].originBitsPerSecond),
-        "originHitsPerSecond": parseFloat(docjson.data[0].originHitsPerSecond)
+        "@timestamp": doc.startdatetime,
+        originalData: {
+        },
       }
 
-      client.index({
-        index: `${indexPrefix}-${now.toISOString().split("T")[0]}`,
-        body: trafficReport
+      FieldsData.forEach((dItem) => {
+        if (dItem.includes("PerSecond"))
+          trafficReport[`${dItem}`] = parseFloat(doc[`${dItem}`]);
+        else
+          trafficReport[`${dItem}`] = parseInt(doc[`${dItem}`]);
       });
 
-      console.log(`Index was saved ${indexPrefix}-${now.toISOString().split("T")[0]}!!!`)
+      trafficReport.originalData = doc;
+      try {
+        client.index({
+          index: `${indexPrefix}-${now.toISOString().split("T")[0]}`,
+          id: `${doc.startdatetime}`,
+          body: trafficReport
+        });
+      } catch (error) {
+        console.log(error);
+        console.dir(trafficReport);
+      }
+    });
+
+    console.log(`Index was saved (${docjson.data.length} docs) ${indexPrefix}-${now.toISOString().split("T")[0]}!!!`)
+
+    if (docjson.summaryStatistics.edgeBytesTotal != undefined) {
+
+      console.log(`Starting to save total-${indexPrefix}-${now.toISOString().split("T")[0]}!!!`)
+
+      var trafficReportTotal = {
+        cpcode: 999999,
+        "Updatedate": now.toISOString().split("T")[0],
+        "@timestamp": now.toISOString(),
+        summaryStatistics: {
+
+        },
+        originalsummaryStatistics: {
+
+        },
+      }
+
+      FieldsSummaryStatistics.forEach((sItem) => {
+        if (sItem.includes("PerSecond") || sItem.includes("BytesTotal") || sItem.includes("BytesTotal"))
+          trafficReportTotal.summaryStatistics[`${sItem}`] = parseFloat(docjson.summaryStatistics[`${sItem}`].value);
+        else
+          trafficReportTotal.summaryStatistics[`${sItem}`] = parseInt(docjson.summaryStatistics[`${sItem}`].value);
+      });
+
+      trafficReportTotal.originalsummaryStatistics = docjson.summaryStatistics;
+
+      try {
+        client.index({
+          index: `total-${indexPrefix}-${now.toISOString().split("T")[0]}`,
+          id: `${now.toISOString().split("T")[0]}`,
+          body: trafficReportTotal
+        });
+
+      } catch (error) {
+        console.log(trafficReportTotal);
+      }
+
+      console.log(`Index was saved total-${indexPrefix}-${now.toISOString().split("T")[0]}!!!`)
     }
+
   }).catch((error) => console.log(error));
 
 }
