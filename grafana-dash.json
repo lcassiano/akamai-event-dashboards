@@ -204,7 +204,8 @@
               "field": "startdatetime",
               "id": "2",
               "settings": {
-                "interval": "1d"
+                "interval": "1d",
+                "timeZone": "America/Bahia"
               },
               "type": "date_histogram"
             }
@@ -661,8 +662,19 @@
               {
                 "id": "displayName",
                 "value": "Max Offload"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Sum summaryStatistics.bytesOffloadMax"
+            },
+            "properties": []
           }
         ]
       },
@@ -695,7 +707,8 @@
               "id": "2",
               "settings": {
                 "interval": "1d",
-                "min_doc_count": "1"
+                "min_doc_count": "1",
+                "timeZone": "America/Araguaina"
               },
               "type": "date_histogram"
             }
@@ -712,6 +725,7 @@
             },
             {
               "field": "summaryStatistics.midgressBytesTotal",
+              "hide": true,
               "id": "3",
               "type": "sum"
             },
@@ -727,6 +741,7 @@
             },
             {
               "field": "summaryStatistics.midgressBitsPerSecondMax",
+              "hide": true,
               "id": "6",
               "type": "sum"
             },
@@ -824,6 +839,6 @@
   "timezone": "",
   "title": "Event-Dashboard",
   "uid": "c5789abd-cb23-4a4d-8755-85430cef8cbb",
-  "version": 1,
+  "version": 4,
   "weekStart": ""
 }
